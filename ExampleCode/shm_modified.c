@@ -25,6 +25,7 @@ int main () {
   int opid;
   char **addr;
   int *pint;
+  int *poff;
 
   int num_blocks;
   int block_size;
@@ -71,6 +72,7 @@ int main () {
 
   // Setup a pointer to address an array of integers:
   pint = (int *) addr[block_to_use];
+  poff = (int *) addr[block_to_use+1];
 
 
   printf("Prior to fork\n");
