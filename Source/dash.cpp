@@ -37,6 +37,7 @@ int main(int argc, char const *argv[])
     string command = "";
     string output = "";
     bool invalid = true;
+    bool init_mem = false;
     int first_char;
     int i;
 
@@ -119,7 +120,7 @@ int main(int argc, char const *argv[])
         {
             if(command[8] == ' ' || command[8] == '\t' || command.size() == 8 )
             {
-                mboxinit(command);
+                init_mem = mboxinit(command);
                 invalid = false;
             }
         }
@@ -128,7 +129,7 @@ int main(int argc, char const *argv[])
         {
             if(command[7] == ' ' || command[7] == '\t' || command.size() == 7 )
             {
-                mboxdel();
+                init_mem = mboxdel(init_mem);
                 invalid = false;
             }
         }
@@ -189,3 +190,6 @@ int main(int argc, char const *argv[])
     
     return 0;
 }
+
+
+

@@ -360,6 +360,7 @@ void print_usage_if_needed( bool invalid, string command ){
     // If there's a blank line (only whitespace) we don't want to print usage messages
     if(command.size() == 0 || command.find_first_not_of(" \t\n")== string::npos)
     {
+        
         blank_line = true;
         invalid = false;
 

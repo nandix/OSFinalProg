@@ -86,11 +86,6 @@ char** parse_args(string command)
 			continue;
 		else
 		{
-			// if(i == (int)command.length()-1)
-			// {
-			// 	i++;
-			// 	char_count++;
-			// }
 			temp = (char*) malloc(char_count*sizeof(char)*(char_count+2));
 			for( j = i-char_count, k = 0; j < i; j++, k++ )
 			{
@@ -105,6 +100,20 @@ char** parse_args(string command)
 
 	}
 	args[arg_num] = NULL;
+
+	return args;
+}
+
+// This function was added for part 3 as a helper when doing command
+//	error checking.
+char** parse_args_c(string command, int &num){
+
+	char** args = parse_args( command );
+
+	num = 0;
+	while( args[num] != NULL ){
+		num++;
+	}
 
 	return args;
 }

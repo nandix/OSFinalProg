@@ -39,9 +39,18 @@
 
 #include <signal.h>
 
+//Needed for mailbox sharing
+#include <sys/ipc.h>     
+#include <sys/shm.h>
+#include <errno.h>
+
 
 
 using namespace std;
+
+const int KB = 1024; // number of bytes in a kilobyte
+const int SHMKEY = 1066;
+
 
 // Usage strings
 const string CMDNM_USAGE = "cmdnm <pid>";
