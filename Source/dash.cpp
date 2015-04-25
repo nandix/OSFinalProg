@@ -187,9 +187,16 @@ int main(int argc, char const *argv[])
         invalid = true;
 
     }
+
+    if( init_mem == true ){
+        mboxdel(init_mem);
+    }
+
     
     return 0;
+    
 }
+
 
 
 

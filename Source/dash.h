@@ -43,6 +43,7 @@
 #include <sys/ipc.h>     
 #include <sys/shm.h>
 #include <errno.h>
+#include <sys/sem.h>
 
 
 
@@ -50,6 +51,7 @@ using namespace std;
 
 const int KB = 1024; // number of bytes in a kilobyte
 const int SHMKEY = 1066;
+const int SEMKEY = 1066;
 
 
 // Usage strings
@@ -58,4 +60,13 @@ const string PID_USAGE = "pid <command>";
 const string SYSTAT_USAGE = "systat";
 const char* DASHES = (const char*)"-----------------------------------------------------------\n";
 
-const bool DEBUGGING = false;
+const bool DEBUGGING = true;
+
+
+union semun 
+{
+  int              val;       /* value for SETVAL */
+  struct semid_ds *buf;       /* buffer for IPC_STAT, IPC_SET */
+  unsigned short int *array;  /* array for GETALL, SETALL */
+  struct seminfo *__buf;      /* buffer for IPC_INFO */
+};

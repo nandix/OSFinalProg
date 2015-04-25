@@ -2,10 +2,15 @@
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& Helpers for part 3 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 char* box_num_to_addr(int box_num, int box_size ){
+
 	
 	int shmid = shmget(SHMKEY, 0, 0666);
 	char* addr = (char*) shmat(shmid, 0, 0);
 	addr += 2*sizeof(int) + box_num * box_size * KB;
+
+	if( DEBUGGING ){
+		printf("Address 0x%x\n", addr);
+	}
 
 	return addr;
 }
@@ -21,10 +26,15 @@ void write_block( char* addr, int box_size, char* msg ){
 
 	for( i = 0; i < msg_size; i++ ){
 		*(addr + i) = msg[i];
-		cout << msg[i];
+
+		if( DEBUGGING )
+			cout << msg[i];
 	}
-cout << endl;
-	*(addr + i) = '\0';
+
+	if( DEBUGGING )
+		cout << endl;
+
+	*(addr + msg_size) = '\0';
 
 	return;
 }
@@ -33,7 +43,7 @@ char* read_block( char* addr, int box_size ){
 	char* msg = (char*) malloc(box_size*KB);
 	int i = 0;
 
-	while( *(addr + i) != '\0' ){
+	while( *(addr + i) != '\0' && i < box_size*KB ){
 		msg[i] = *(addr+i);
 		i++;
 	}
@@ -41,6 +51,44 @@ char* read_block( char* addr, int box_size ){
 
 	return msg;
 }
+
+int lock_sem(int mbox_index){
+
+	struct sembuf lock; 
+	int opid; 
+	int id;
+	int semval;
+
+	id = semget(SEMKEY, 0, 0);
+
+	cout << "Sem val: " << semctl(id, mbox_index, GETVAL, 0) << endl;
+
+	while( semctl(id, mbox_index, GETVAL, 0) < 1 );
+
+	lock.sem_num = mbox_index;  // semaphore index
+	lock.sem_op = -1; // the operation
+	lock.sem_flg = IPC_NOWAIT;  // operation flags
+	opid = semop(id, &lock, 1);  // perform the requested operation
+
+	return opid;
+}
+
+int unlock_sem(int mbox_index){
+
+	struct sembuf lock;
+	int opid;
+	int id;
+
+	id = semget(SEMKEY, 0, 0);
+
+	lock.sem_num = mbox_index; // semaphore index
+	lock.sem_op = 1; // the operation
+	lock.sem_flg = IPC_NOWAIT; // operation flags
+	opid = semop(id, &lock, 1); // perform the requested operation
+
+	return opid;
+}
+
 
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& Helpers for part 3 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
@@ -61,12 +109,15 @@ char* read_block( char* addr, int box_size ){
 bool mboxinit(string command){
 	//cout << "Made it to mboxinit!" << endl;
 
+	int i;
 	int argc;
 	int num_boxes;
 	int box_size;
 
 	int shmid;
+	int semid;
 	int* pint;
+	union semun options;
 
 	char ** args = parse_args_c( command, argc );
 
@@ -90,13 +141,32 @@ bool mboxinit(string command){
 
 
 	// Otherwise, the correct number of mailboxes were created
-	cout << "shmid = " << shmid << endl;
+	if( DEBUGGING )
+		cout << "shmid = " << shmid << endl;
 
 	// Write the number of boxes and box size to the first block
 	pint = (int*) shmat(shmid, 0, 0);
 	*(pint) = num_boxes;
 	*(pint + 1) = box_size;
 
+	// Set up the semaphore for the mailboxes
+	semid = semget(SEMKEY, num_boxes, IPC_CREAT | IPC_EXCL | 0666);
+
+	// Initialize all mailboxes to 1
+	options.val = 1;
+	for( i = 0; i < num_boxes; i++ ){
+
+  		semctl(semid , i, SETVAL, options);
+
+  		if (semctl(semid, i, GETVAL, 0) == 0 ) {
+			cout << "Unable to lock semaphore " << i << endl;
+			return false;
+		}
+	}
+
+	for( i = 0; i < num_boxes; i++ ){
+		cout << "Mbox " << i << " = " << semctl(semid,i,GETVAL,0) << endl;
+	}
 
 	return true;
 }
@@ -122,7 +192,8 @@ bool mboxdel(bool my_mem){
 		cout << "Shared memory not set up. No need to delete!" << endl;
 		return false;
 	}
-	else if( my_mem == false ){
+
+	else if( my_mem == false && DEBUGGING == false ){
 		cout << "Memory not set up by this shell. Cannot delete!" << endl;
 		return false;
 	}
@@ -167,18 +238,21 @@ void mboxwrite(string command){
 	}
 
 
+	write_box = atoi( args[1] );
+
+	lock_sem(write_box);
+
 	int* pint = (int*) shmat( shmid, 0, 0 );
 	num_boxes = *(pint);
 	box_size = *(pint + 1);
 
-	cout << "Num_boxes: " << num_boxes << endl;
-	cout << "Box_size: " << box_size << endl;
-
-	write_box = atoi( args[1] );
-
 	addr = box_num_to_addr( write_box, box_size );
 
 	write_block( addr, box_size, args[2] );
+
+	sleep(10);
+
+	unlock_sem(write_box);
 
 	return;
 }
@@ -221,16 +295,22 @@ void mboxread(string command){
 	}
 
 
+	read_box = atoi(args[1]);
+
+	lock_sem(read_box);
+
 	int* pint = (int*) shmat( shmid, 0, 0 );
 	num_boxes = *(pint);
 	box_size = *(pint + 1);
 
-	read_box = atoi(args[1]);
 
 	addr = box_num_to_addr( read_box, box_size );
 
 	msg = read_block(addr, box_size);
 	cout << "MSG: " << msg << endl;
+
+	unlock_sem(read_box);
+
 	return;
 }
 
@@ -258,6 +338,7 @@ void mboxcopy(string command){
 
 	char* addr;
 	char* temp;
+
 	char ** args = parse_args_c( command, argc );
 
 	if( argc != 3){
@@ -275,13 +356,18 @@ void mboxcopy(string command){
 	copy_from = atoi( args[1] );
 	copy_to = atoi( args[2] );
 
+	lock_sem(copy_from);
 
 	int* pint = (int*) shmat( shmid, 0, 0 );
 	num_boxes = *(pint);
 	box_size = *(pint + 1);
 
 	temp = read_block( box_num_to_addr( copy_from , box_size ), copy_from);
+	unlock_sem(copy_from);
+
+	lock_sem(copy_to);
 	write_block( box_num_to_addr( copy_to , box_size ), box_size, temp );
+	unlock_sem(copy_to);
 
 	return;
 }
