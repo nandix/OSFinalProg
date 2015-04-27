@@ -60,7 +60,7 @@ const string PID_USAGE = "pid <command>";
 const string SYSTAT_USAGE = "systat";
 const char* DASHES = (const char*)"-----------------------------------------------------------\n";
 
-const bool DEBUGGING = true;
+const bool DEBUGGING = false;
 
 
 union semun 

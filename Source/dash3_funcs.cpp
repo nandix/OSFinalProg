@@ -60,7 +60,8 @@ int lock_sem(int mbox_index){
 
 	id = semget(SEMKEY, 0, 0);
 
-	cout << "Sem val: " << semctl(id, mbox_index, GETVAL, 0) << endl;
+	if( DEBUGGING )
+		cout << "Sem val: " << semctl(id, mbox_index, GETVAL, 0) << endl;
 
 	while( semctl(id, mbox_index, GETVAL, 0) < 1 );
 
@@ -129,6 +130,11 @@ bool mboxinit(string command){
 	num_boxes = atoi(args[1]);
 	box_size = atoi(args[2]);
 
+	if(num_boxes < 1 ){
+		cout << "Number of mailboxes must be 1 or greater!" << endl;
+		return false;
+	}
+
 	// Check if shared memory is already set up. If it is, return -1.
 	shmid = shmget(SHMKEY, 2*sizeof(int) + num_boxes*box_size*KB, 
 						IPC_CREAT | IPC_EXCL | 0666);
@@ -156,7 +162,7 @@ bool mboxinit(string command){
 	for( i = 0; i < num_boxes; i++ ){
 
 		// Stick a null terminator at the start of each block
-		write_block(box_num_to_addr(i), box_size, "");
+		write_block(box_num_to_addr(i, box_size), box_size, "");
 
   		semctl(semid , i, SETVAL, options);
 
@@ -238,6 +244,7 @@ void mboxwrite(string command){
 	char ** args = parse_args_c( command, argc );
 	if( argc != 3 ){
 		cout << "mboxwrite usage: mboxwrite <box_number> <message>" << endl;
+		return;
 	}
 
 
@@ -245,6 +252,7 @@ void mboxwrite(string command){
 
 	if( shmid == -1 ){
 		cout << "Shared memory not set up. Use mboxinit first!" << endl;
+		return;
 	}
 
 
@@ -255,7 +263,7 @@ void mboxwrite(string command){
 	num_boxes = *(pint);
 	box_size = *(pint + 1);
 
-	if( write_box >= num_boxes ){
+	if( write_box >= num_boxes || write_box < 0 ){
 		cout << "Cannot write to box " << write_box << "." << endl;
 		cout << "Select a mailbox from 0 to " << num_boxes - 1 << endl;
 		return;
@@ -266,8 +274,6 @@ void mboxwrite(string command){
 	addr = box_num_to_addr( write_box, box_size );
 
 	write_block( addr, box_size, args[2] );
-
-	sleep(10);
 
 	unlock_sem(write_box);
 
@@ -319,20 +325,24 @@ void mboxread(string command){
 	num_boxes = *(pint);
 	box_size = *(pint + 1);
 
-	if( read_box >= num_boxes ){
+	if( read_box >= num_boxes || read_box < 0 ){
 		cout << "Cannot read from box " << read_box << "." << endl;
 		cout << "Select a mailbox from 0 to " << num_boxes - 1 << endl;
 		return;
 	}
 
-	cout << "About to READ: " << read_box << endl;
 	lock_sem(read_box);
-	cout << "Reading: " << read_box << endl;
 
 	addr = box_num_to_addr( read_box, box_size );
 
 	msg = read_block(addr, box_size);
-	cout << "MSG: " << msg << endl;
+
+	if( strlen(msg) == 0 ){
+		cout << "Mailbox " << read_box << " is empty!" << endl;
+	}
+	else{
+		cout << "Mailbox " << read_box << " contains: " << msg << endl;
+	}
 
 	unlock_sem(read_box);
 
@@ -352,7 +362,6 @@ void mboxread(string command){
 
 */
 void mboxcopy(string command){
-	cout << "Made it to mboxcopy!" << endl;
 
 	int argc;
 	int copy_to;
@@ -386,13 +395,13 @@ void mboxcopy(string command){
 	num_boxes = *(pint);
 	box_size = *(pint + 1);
 
-	if( copy_from >= num_boxes ){
+	if( copy_from >= num_boxes || copy_from < 0 ){
 		cout << "Cannot copy from box " << copy_from << "." << endl;
 		cout << "Select a mailbox from 0 to " << num_boxes - 1 << endl;
 		return;
 	}
 
-	if( copy_to >= num_boxes ){
+	if( copy_to >= num_boxes || copy_to < 0 ){
 		cout << "Cannot copy to box " << copy_to << "." << endl;
 		cout << "Select a mailbox from 0 to " << num_boxes - 1 << endl;
 		return;
@@ -400,8 +409,11 @@ void mboxcopy(string command){
 
 
 	lock_sem(copy_from);
-	temp = read_block( box_num_to_addr( copy_from , box_size ), copy_from);
+	temp = read_block( box_num_to_addr( copy_from , box_size ), box_size);
 	unlock_sem(copy_from);
+
+	if(DEBUGGING)
+		cout << "Temp is: " << temp << " with size " << strlen(temp) << endl;
 
 	lock_sem(copy_to);
 	write_block( box_num_to_addr( copy_to , box_size ), box_size, temp );
