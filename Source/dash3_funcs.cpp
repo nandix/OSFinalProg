@@ -9,7 +9,7 @@ char* box_num_to_addr(int box_num, int box_size ){
 	addr += 2*sizeof(int) + box_num * box_size * KB;
 
 	if( DEBUGGING ){
-		printf("Address 0x%x\n", addr);
+		cout << "Address 0x" << addr << endl;
 	}
 
 	return addr;
@@ -57,7 +57,6 @@ int lock_sem(int mbox_index){
 	struct sembuf lock; 
 	int opid; 
 	int id;
-	int semval;
 
 	id = semget(SEMKEY, 0, 0);
 
@@ -156,6 +155,9 @@ bool mboxinit(string command){
 	options.val = 1;
 	for( i = 0; i < num_boxes; i++ ){
 
+		// Stick a null terminator at the start of each block
+		write_block(box_num_to_addr(i), box_size, "");
+
   		semctl(semid , i, SETVAL, options);
 
   		if (semctl(semid, i, GETVAL, 0) == 0 ) {
@@ -164,8 +166,10 @@ bool mboxinit(string command){
 		}
 	}
 
-	for( i = 0; i < num_boxes; i++ ){
-		cout << "Mbox " << i << " = " << semctl(semid,i,GETVAL,0) << endl;
+	if( DEBUGGING ){
+		for( i = 0; i < num_boxes; i++ ){
+			cout << "Mbox " << i << " = " << semctl(semid,i,GETVAL,0) << endl;
+		}
 	}
 
 	return true;
@@ -184,8 +188,10 @@ bool mboxinit(string command){
 
 */
 bool mboxdel(bool my_mem){
-	//cout << "Made it to mboxdel!" << endl;
+	
 	int shmid;
+	int semid;
+
 	shmid = shmget(SHMKEY, 0, 0666);
 
 	if( shmid == -1 ){
@@ -199,6 +205,10 @@ bool mboxdel(bool my_mem){
 	}
 
 	shmctl(shmid, IPC_RMID, 0);
+
+	// Delete the semaphores
+	semid = semget(SEMKEY, 0, 0);
+	semctl(semid, 0, IPC_RMID, 0);
 
 	return false;
 }
@@ -240,11 +250,18 @@ void mboxwrite(string command){
 
 	write_box = atoi( args[1] );
 
-	lock_sem(write_box);
 
 	int* pint = (int*) shmat( shmid, 0, 0 );
 	num_boxes = *(pint);
 	box_size = *(pint + 1);
+
+	if( write_box >= num_boxes ){
+		cout << "Cannot write to box " << write_box << "." << endl;
+		cout << "Select a mailbox from 0 to " << num_boxes - 1 << endl;
+		return;
+	}
+
+	lock_sem(write_box);
 
 	addr = box_num_to_addr( write_box, box_size );
 
@@ -297,12 +314,20 @@ void mboxread(string command){
 
 	read_box = atoi(args[1]);
 
-	lock_sem(read_box);
 
 	int* pint = (int*) shmat( shmid, 0, 0 );
 	num_boxes = *(pint);
 	box_size = *(pint + 1);
 
+	if( read_box >= num_boxes ){
+		cout << "Cannot read from box " << read_box << "." << endl;
+		cout << "Select a mailbox from 0 to " << num_boxes - 1 << endl;
+		return;
+	}
+
+	cout << "About to READ: " << read_box << endl;
+	lock_sem(read_box);
+	cout << "Reading: " << read_box << endl;
 
 	addr = box_num_to_addr( read_box, box_size );
 
@@ -336,7 +361,7 @@ void mboxcopy(string command){
 	int num_boxes;
 	int box_size;
 
-	char* addr;
+	// char* addr;
 	char* temp;
 
 	char ** args = parse_args_c( command, argc );
@@ -356,12 +381,25 @@ void mboxcopy(string command){
 	copy_from = atoi( args[1] );
 	copy_to = atoi( args[2] );
 
-	lock_sem(copy_from);
 
 	int* pint = (int*) shmat( shmid, 0, 0 );
 	num_boxes = *(pint);
 	box_size = *(pint + 1);
 
+	if( copy_from >= num_boxes ){
+		cout << "Cannot copy from box " << copy_from << "." << endl;
+		cout << "Select a mailbox from 0 to " << num_boxes - 1 << endl;
+		return;
+	}
+
+	if( copy_to >= num_boxes ){
+		cout << "Cannot copy to box " << copy_to << "." << endl;
+		cout << "Select a mailbox from 0 to " << num_boxes - 1 << endl;
+		return;
+	}
+
+
+	lock_sem(copy_from);
 	temp = read_block( box_num_to_addr( copy_from , box_size ), copy_from);
 	unlock_sem(copy_from);
 
