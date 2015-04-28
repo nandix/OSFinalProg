@@ -8,9 +8,8 @@
 
 //Paging Functions
 void paging(void);
-void set_up_page();
-void page_table_sizes( int *pages, int *page_size, int** page_table );
-void paging_algorithm( int *pages, int *page_size, int *page_table, int *page, int *frame );
-
+void page_table_sizes( int ** page_table, int *pages, int **frame_table, int *frames, int *pages_size );
+void paging_algorithm( int *page_table, int* pages, int *frame_table, int *frames, int *page_size, int *p, int *d);
+void access_physical_mem( int *d, int *frame, int *frames, int *page);
 #endif
 

@@ -12,8 +12,9 @@ int main( int argc, char **argv )
     mmu_options[0] = relocation_register;
     mmu_options[1] = paging;
     mmu_options[2] = tlb;
-
     int input = 1;
+
+    srand ( time(NULL) );
     do
     {
         printf("Memory Management Unit (MMU) Simulation Options:\n");

@@ -23,6 +23,8 @@ void paging(void)
         d = rand() % (page_size * 2);
         paging_algorithm( page_table, &pages, frame_table,  &frames, &page_size, &p, &d);
     }
+    free(page_table);
+    free(frame_table);
 
 }
 
@@ -74,25 +76,39 @@ void paging_algorithm( int *page_table, int * pages, int *frame_table, int *fram
 {
     int i;
     bool found = false;
-    printf( "Looking for %d in page table:\n");
+    int tmp;
+    int total_mem;
+
+    printf( "Looking for %d in page table:\n", *p);
     for( i = 0; i < *pages && !found; i++)
     {
         if( i == *p )
         {
-            printf("Entry found in page %d and frame %d with offset of %d bytes", i, page_table[i], *d);
-            if( *d < *page_size)
-                found = true;
-            else
-            {
-                
-            }
+            found = true;
+            printf("Entry found in page %d.\n Accessing frame %d with offset of %d bytes", i, page_table[i], *d);
+            access_physical_mem( &d, page_table[i], &frames, &page_size);
         }
-
     }
     if(!found)
     {
-        printf("Entry not found in page table. Tried accessing %d.")
+        printf("Entry not found in page table. Tried accessing %d.", *p)
     }
 }
 
-
+void access_physical_mem( int *d, int *frame, *frames, *page_size)
+{
+    int tmp, total_mem;
+    //sleep for 1 second to simulate access time to physical memory
+    sleep(1);
+    if( *d < *page_size)
+        printf("Frame, %d, with offset, %d, accessed successfully.\n", page_table[i], *d);
+    else
+    {
+        tmp = (*frame) * (*page_size) + *d;
+        total_mem = (*frames) * (*page_size);
+        if( tmp >= total_mem )
+            printf("The offset, %d, accessed non existent memory.\n");
+        else
+            printf("The offset, %d, accessed frame, %d, not in page table.\n", *d, tmp%total_mem);
+    }
+}

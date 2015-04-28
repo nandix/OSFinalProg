@@ -1,7 +1,6 @@
 #include "../include/reloc.h"
 void relocation_register(void)
 {
-    srand ( time(NULL) );
     int i;
     unsigned int base = 0;
     unsigned int max = rand() % 20000;
