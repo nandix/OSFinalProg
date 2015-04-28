@@ -8,14 +8,14 @@ void tlb(void)
     int num_tlb;
     int *tlb_pages, *tlb_frames;
     //page and frame array
-    int *page_table, frame_table;
+    int *page_table, *frame_table;
     //number of pages and frames and size in bytes
     int pages, frames, page_size;
 
     fp tlb_replacements[3] = { tlb_miss_random, tlb_miss_round_robin, tlb_miss_least_used};
 
     page_table_sizes( &page_table, &pages, &frame_table, &frames, &page_size);
-    tlb_set_up( &tlb_pages, &tlb_frames, &num_tlb, &tlb_frames, page_table, pages);
+    tlb_set_up( &tlb_pages, &tlb_frames, &num_tlb, page_table, &pages);
     input = tlb_replacement();
     
     printf("How many iterations to run: ");
@@ -28,7 +28,7 @@ void tlb(void)
         if( !in_tlb( tlb_pages, tlb_frames, &num_tlb, &page_size, &frames,  &p, &d  ) )
         {
             tlb_replacements[input]( tlb_pages, tlb_frames, page_table, &num_tlb, &pages);
-            paging_algorithm( &pages, &page_size, page_table, &page, &frame_num, &p, &d);
+            paging_algorithm( page_table, &pages, frame_table, &frames, &page_size, &p, &d);
         }
     }    
     free( tlb_pages );
@@ -41,30 +41,30 @@ void tlb_set_up( int **tlb_pages,int **tlb_frames,  int *num_tlb, int *page_tabl
 {
     int i, tmp;
     printf("How many entries in TLB? (  0 for random number between 32 and 1024 ): ");
-    scanf( "%d", &num_tlb );
+    scanf( "%d", num_tlb );
 
     if( num_tlb <= 0 )
     {
         *num_tlb = rand() % 1025;
         *num_tlb += (*num_tlb < 32) ? 32 : 0;
-        printf("%d entries will be created and randomly assigned pages.\n");
+        printf("%d entries will be created and randomly assigned pages.\n", *num_tlb);
     }
     *tlb_pages =  (int*)malloc( sizeof( int ) * (*num_tlb) );
     *tlb_frames = (int*)malloc( sizeof( int ) * (*num_tlb) );
-    for( i = 0; i < num_tlb; i++ )
+    for( i = 0; i < *num_tlb; i++ )
         *tlb_pages[i] = -1;
     
     tmp = rand() % *pages;
-    for( i = 0; i < num_tlb; i++ )
+    for( i = 0; i < *num_tlb; i++ )
     {
-        while( tlb_pages[tmp] == -1)
+        while( *tlb_pages[tmp] == -1)
             tmp = rand() % *pages;
         *tlb_pages[i] = tmp;
         *tlb_frames[i] = page_table[tmp];
     }
     printf("Page Number\tFrame Number\n");
     for( i = 0; i < *num_tlb; i++ )
-        printf("\t%d\t%d\n",tlb_pages[i], tlb_frames[i]);
+        printf("\t%d\t%d\n",*tlb_pages[i], *tlb_frames[i]);
 }
 
 int tlb_replacement( )
@@ -84,14 +84,14 @@ bool in_tlb( const int *tlb_pages, const int *tlb_frames, const int *num_tlb, co
 {
     int i;
     bool exists = false;
-    printf("Searching TLB for: %d\n", page );
+    printf("Searching TLB for: %d\n", *p );
 
     for( i = 0; i < *num_tlb; i++ )
     {
         if( tlb_pages[i] == *p )
         {
             printf("Page Found in TLB.\n");
-            access_physical_mem( &d, tlb_frames[i], &frames, &page_size)
+            access_physical_mem( d, &tlb_frames[i], frames, page_size);
             exists = true;
         }
     }

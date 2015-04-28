@@ -11,7 +11,7 @@ void paging(void)
     int page_size;
     //number of simulations to run
     int iterations;
-    int p, d;
+    int p, d, i;
     page_table_sizes( &page_table, &pages, &frame_table, &frames, &page_size );
     
     printf("How many iterations to run: ");
@@ -30,14 +30,13 @@ void paging(void)
 
 void page_table_sizes( int **page_table, int *pages, int **frame_table, int *frames, int *page_size )
 {
-    int count;
-    int i;
+    int count, tmp, i;
     do
     {
         printf("How many frames are to be implemented: ");
-        scaanf("%d", &frames);
+        scanf("%d", frames);
         printf("How many pages are to be implemented (<= frames): ");
-        scanf("%d", &pages);
+        scanf("%d", pages);
         if( frames < pages )
             printf( "frames must be greater than or equal to pages.");
     }while(frames < pages);
@@ -46,10 +45,10 @@ void page_table_sizes( int **page_table, int *pages, int **frame_table, int *fra
     {
         count = 0;
         printf("Enter a block size for pages/frames (power of two ex 2, 4, 8, 16, 32...): ");
-        scanf("%d", &page_size);
+        scanf("%d", page_size);
         for( i = 0; i < 20; i++)
         {
-            if( ( page_size & ( 1 << i )) != 0 )
+            if( ( *page_size & ( 1 << i )) != 0 )
                 count++;
         }
         if( count > 1)
@@ -60,15 +59,15 @@ void page_table_sizes( int **page_table, int *pages, int **frame_table, int *fra
     *page_table = (int*)malloc( sizeof(int) *  (*pages) );
     
     for( i = 0; i < *frames; i++ )
-        frame_table[i] = -1;
+        *frame_table[i] = -1;
     tmp = rand() % *frames;
     
     for( i = 0; i < *pages; i++ )
     {
-        while( frame[tmp] != -1 ) 
+        while( *frame_table[tmp] != -1 ) 
             tmp = rand() % *frames;
-        page_table[i] = tmp;
-        frame_table[tmp] = i;
+        *page_table[i] = tmp;
+        *frame_table[tmp] = i;
     }
 }
 
@@ -76,8 +75,6 @@ void paging_algorithm( int *page_table, int * pages, int *frame_table, int *fram
 {
     int i;
     bool found = false;
-    int tmp;
-    int total_mem;
 
     printf( "Looking for %d in page table:\n", *p);
     for( i = 0; i < *pages && !found; i++)
@@ -86,28 +83,26 @@ void paging_algorithm( int *page_table, int * pages, int *frame_table, int *fram
         {
             found = true;
             printf("Entry found in page %d.\n Accessing frame %d with offset of %d bytes", i, page_table[i], *d);
-            access_physical_mem( &d, page_table[i], &frames, &page_size);
+            access_physical_mem( d, &page_table[i], frames, page_size);
         }
     }
     if(!found)
-    {
-        printf("Entry not found in page table. Tried accessing %d.", *p)
-    }
+        printf("Entry not found in page table. Tried accessing %d.", *p);
 }
 
-void access_physical_mem( int *d, int *frame, *frames, *page_size)
+void access_physical_mem( const int *d, const int *frame, const int *frames, const int *page_size)
 {
     int tmp, total_mem;
     //sleep for 1 second to simulate access time to physical memory
     sleep(1);
     if( *d < *page_size)
-        printf("Frame, %d, with offset, %d, accessed successfully.\n", page_table[i], *d);
+        printf("Frame, %d, with offset, %d, accessed successfully.\n", *frame, *d);
     else
     {
         tmp = (*frame) * (*page_size) + *d;
         total_mem = (*frames) * (*page_size);
         if( tmp >= total_mem )
-            printf("The offset, %d, accessed non existent memory.\n");
+            printf("The offset, %d, accessed non existent memory.\n", *d);
         else
             printf("The offset, %d, accessed frame, %d, not in page table.\n", *d, tmp%total_mem);
     }

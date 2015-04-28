@@ -9,8 +9,10 @@ void relocation_register(void)
 
     printf("\n\nHow many relocations are to be run? ");
     scanf( "%d", &iterations );
-    printf("\nMax address space is: %u\n", max );
+    printf("\nMin logical address space is: %u\n", base );
+    printf("Max logical address space is: %u\n", max );
     printf("Relocation register is: %u\n", relocation);
+    printf("Min physical address space is: %u\n", relocation);
     printf("Max physical address space is: %u\n\n", max + relocation);
     sleep(2);
     for( i = 0; i < iterations; i++ )
