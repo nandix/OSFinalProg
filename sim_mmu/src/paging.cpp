@@ -37,9 +37,9 @@ void page_table_sizes( int **page_table, int *pages, int **frame_table, int *fra
         scanf("%d", frames);
         printf("How many pages are to be implemented (<= frames): ");
         scanf("%d", pages);
-        if( frames < pages )
-            printf( "frames must be greater than or equal to pages.");
-    }while(frames < pages);
+        if( *frames < *pages )
+            printf( "frames must be greater than or equal to pages.\n");
+    }while(*frames < *pages);
     
     do
     {
@@ -108,6 +108,6 @@ void access_physical_mem( const int *d, const int *frame, const int *frames, con
         if( tmp >= total_mem )
             printf("The offset, %d, accessed non existent memory.\n\n", *d);
         else
-            printf("The offset, %d, accessed frame, %d, not in page table.\n\n", *d, tmp/ (*frames)  );
+            printf("The offset, %d, accessed frame, %d, which is not associated with original look up.\n\n", *d, tmp/ (*frames)  );
     }
 }
