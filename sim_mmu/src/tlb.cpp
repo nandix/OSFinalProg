@@ -20,11 +20,12 @@ void tlb(void)
     
     printf("How many iterations to run: ");
     scanf( "%d", &iterations );
+    printf("\n\n");
     
     for( i = 0; i < iterations; i ++)
     {   
-        p = rand() % page_size;
-        d = rand() % (frames * 2);
+        p = rand() % pages;
+        d = rand() % (page_size * 2);
         if( !in_tlb( tlb_pages, tlb_frames, &num_tlb, &page_size, &frames,  &p, &d  ) )
         {
             tlb_replacements[input]( tlb_pages, tlb_frames, page_table, &num_tlb, &pages);
@@ -39,7 +40,7 @@ void tlb(void)
 
 void tlb_set_up( int **tlb_pages,int **tlb_frames,  int *num_tlb, int *page_table, int *pages)
 {
-    int i, tmp;
+    int i, j, tmp;
     printf("How many entries in TLB? (  0 for random number between 32 and 1024 ): ");
     scanf( "%d", num_tlb );
 
@@ -52,19 +53,26 @@ void tlb_set_up( int **tlb_pages,int **tlb_frames,  int *num_tlb, int *page_tabl
     *tlb_pages =  (int*)malloc( sizeof( int ) * (*num_tlb) );
     *tlb_frames = (int*)malloc( sizeof( int ) * (*num_tlb) );
     for( i = 0; i < *num_tlb; i++ )
-        *tlb_pages[i] = -1;
-    
-    tmp = rand() % *pages;
+        (*tlb_pages)[i] = -1;
+
     for( i = 0; i < *num_tlb; i++ )
     {
-        while( *tlb_pages[tmp] == -1)
-            tmp = rand() % *pages;
-        *tlb_pages[i] = tmp;
-        *tlb_frames[i] = page_table[tmp];
+        tmp = rand() % *pages;
+        for( j = 0; j < i; j++ )
+        {
+            if( (*tlb_pages)[j] == tmp )
+            {
+                j = -1;
+                tmp = rand() % (*pages);
+            }
+        }
+        (*tlb_pages)[i] = tmp;
+        (*tlb_frames)[i] = page_table[tmp];
     }
     printf("The TLB table:\n");
     for( i = 0; i < *num_tlb; i++ )
         printf("Entry %d contains page %d and frame refrence %d\n",i, (*tlb_pages)[i], (*tlb_frames)[i]);
+    printf("\n\n");
 }
 
 int tlb_replacement( )
@@ -72,7 +80,7 @@ int tlb_replacement( )
     int input;
     do
     {
-        printf("\n\nTLB replacement policies to choose from: \n" );
+        printf("TLB replacement policies to choose from: \n" );
         printf("1) Random\n2) Round Robin\n3) Least Recently Used\n");
         printf("User Choice (1,2, or 3): ");
         scanf( "%d", &input );
