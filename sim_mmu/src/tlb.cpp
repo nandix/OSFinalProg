@@ -62,9 +62,9 @@ void tlb_set_up( int **tlb_pages,int **tlb_frames,  int *num_tlb, int *page_tabl
         *tlb_pages[i] = tmp;
         *tlb_frames[i] = page_table[tmp];
     }
-    printf("Page Number\tFrame Number\n");
+    printf("The TLB table:\n");
     for( i = 0; i < *num_tlb; i++ )
-        printf("\t%d\t%d\n",*tlb_pages[i], *tlb_frames[i]);
+        printf("Entry %d contains page %d and frame refrence %d\n",i, (*tlb_pages)[i], (*tlb_frames)[i]);
 }
 
 int tlb_replacement( )
