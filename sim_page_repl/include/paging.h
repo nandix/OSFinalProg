@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <deque>
+#include <vector>
 
 using namespace std;
 
@@ -17,6 +18,7 @@ const int EMPTY_FRAME = 2;
 struct page{
 	int frame_num;
 	int page_num;
+	long lru_time;
 };
 
 
@@ -30,7 +32,9 @@ int insert_in_open( page *p, page ** frame_table, int size );
 
 int find_optimal_repl(page **frame_table, page **page_list, int frames, int pages, int i );
 
-void print_frame_table(page **frame_table, int frames);
+int find_lru_repl( page **frame_table, int frames );
+
+void print_frame_table(page **frame_table, int frames, bool print_time);
 
 
 #endif

@@ -51,6 +51,7 @@ int page_miss( page *p, page ** frame_table, int size ){
     int i;
     for( i=0; i<size; i++ ){
         if( (*frame_table)[i].page_num == (*p).page_num ){
+            (*frame_table)[i].lru_time = clock();
             return PAGE_IN_TABLE;
         }
         else if( (*frame_table)[i].page_num == -1 ){
@@ -82,11 +83,17 @@ int insert_in_open( page *p, page ** frame_table, int size ){
 
 }
 
-void print_frame_table(page **frame_table, int frames){
+void print_frame_table(page **frame_table, int frames, bool print_time){
     int i;
     for( i = 0; i < frames; i++ ){
-        printf("Frame %d: P(%d) F(%d)\n", 
-            i, (*frame_table)[i].page_num, (*frame_table)[i].frame_num );
+        if( print_time == false){
+            printf("Frame %d: P(%d) F(%d)\n", 
+                i, (*frame_table)[i].page_num, (*frame_table)[i].frame_num );
+        }
+        else{
+            printf("Frame %d: P(%d) F(%d) T(%ld)\n", 
+                i, (*frame_table)[i].page_num, (*frame_table)[i].frame_num, (*frame_table)[i].lru_time );
+        }
     }
 }
 
@@ -94,7 +101,7 @@ void print_frame_table(page **frame_table, int frames){
 
 
 
-int find_optimal_repl(page **frame_table, page **page_list, int frames, int pages, int pos ){
+int find_optimal_repl(page **frame_table, page **page_list, int frames, int page_requests, int pos ){
 
     int index = -1;
     int longest = 0;
@@ -102,9 +109,14 @@ int find_optimal_repl(page **frame_table, page **page_list, int frames, int page
 
     int i,j;
 
+    if( pos == page_requests - 1 ){
+        return 0;
+    }
+
     for( i=0; i<frames; i++ ){
         count = 0;
-        for( j=pos+1; j<pages; j++ ){
+        for( j=pos; j<page_requests; j++ ){
+            // compare each frame in table to next occurnece in list
             if( (*page_list)[j].page_num != (*frame_table)[i].page_num ){
                 count++;
             }
@@ -116,6 +128,22 @@ int find_optimal_repl(page **frame_table, page **page_list, int frames, int page
             longest = count;
             index = i;
             continue;
+        }
+    }
+
+    return index;
+}
+
+int find_lru_repl( page **frame_table, int frames ){
+    
+    int i;
+    int index = -1;
+    long cur_lru_time = (*frame_table)[0].lru_time + 1;
+
+    for( i=0; i < frames; i++ ){
+        if( (*frame_table)[i].lru_time < cur_lru_time ){
+            index = i;
+            cur_lru_time = (*frame_table)[i].lru_time;
         }
     }
 
