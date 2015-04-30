@@ -438,7 +438,7 @@ void second_chance_alg(void){
 
 }
 
-
+// Do we need this?
 void clock_alg(void){
 
 	printf("\nRunning %s Replacement Algorithm Simulation\n\n", "Clock");
