@@ -32,8 +32,8 @@ int page_miss( page *p, page ** frame_table, int size );
 int insert_in_open( page *p, page ** frame_table, int size );
 
 int find_optimal_repl(page **frame_table, page **page_list, int frames, int pages, int i );
-
 int find_lru_repl( page **frame_table, int frames );
+int find_lfu_repl( page **frame_table, int frames, vector<int> page_counts );
 int find_second_chance_repl( page **frame_table, int frames );
 
 void print_frame_table(page **frame_table, int frames, bool print_time);

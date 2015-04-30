@@ -150,6 +150,21 @@ int find_lru_repl( page **frame_table, int frames ){
     return index;
 }
 
+int find_lfu_repl( page **frame_table, int frames, vector<int> page_counts ){
+    int i;
+    int index = -1;
+    int lfu_min = 1000000000;
+
+    for( i=0; i < frames; i++ ){
+        if( page_counts[(*frame_table)[i].page_num] < lfu_min ){
+            index = i;
+            lfu_min = page_counts[(*frame_table)[i].page_num];
+        }
+    }
+
+    return index;
+}
+
 int find_second_chance_repl( page **frame_table, int frames ){
     
     int i;

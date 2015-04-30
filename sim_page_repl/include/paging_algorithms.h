@@ -10,7 +10,9 @@
 void fifo_alg(void);
 void optimal_alg(void);
 void lru_alg(void);
+void lfu_alg(void);
 void second_chance_alg(void);
+void clock_alg(void);
 
 
 #endif
