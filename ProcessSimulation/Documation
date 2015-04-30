@@ -1,0 +1,21 @@
+Program Description
+
+The purpose of the process simulation is to demonstrate how different process scheduling methods work to a new user. A user may select from a list of page replacement algorithms consisting of:
+Round Robin
+Shortest Job First
+First Come First Serve
+The output of each algorithm is when a process is running or if the system is in an idle state. The application will give a time for when each process starts and finishes.
+
+Algorithm
+Setup
+
+Each simulation begins by prompting the user to enter in the number of processes they would like to simulate between 1 and 10. In the Round Robin simulation the user is also prompted to enter a quantum. The simulation then will prompt the user to enter arrival and burst times for each process. Once the user has all the information inputted a process table will be displayed.
+A breif description of the simulation is outputted and then the simulation starts. The output is when a process starts and finishes and if the system is idle it will output how long the system is idle.
+
+Round Robin
+In the Round Robin process scheduling algorithm, a quantum is added which is a block of time that a process will run before starting the next process in the queue. If there are no processes that have arrived yet the system is idle for that quantum. Round Robin trys to make sure every process gets a reasonable response time. Please note each block of text is a quantum.
+In the Shortest Job First process scheduling algorithm, the processes that have the smallest burst and have arrived are executed first. If a process is already running they are put in a queue and will be executed once the other process has finished.
+In the First Come First Serve process scheduling alogrithm, process are ran as soon as they arrive if they can. If not, they are added to a queue and are executed once the other process finishes. If nothing is in the queue the system is idle.
+
+Simulation Testing
+Testing for each algorthm was done by testing all the different edge cases that could happen with a sort. Even testing bad input to make sure proper error messages are displayed. When teach algorithm was confirmed to be correct it was pushed to the GitHub repository. All simulations ran for tests resulted in correct output.
