@@ -83,7 +83,7 @@ int insert_in_open( page *p, page ** frame_table, int size ){
 
 }
 
-void print_frame_table(page **frame_table, int frames, bool print_time){
+void print_frame_table(page **frame_table, int frames, bool print_time ){
     int i;
     for( i = 0; i < frames; i++ ){
         if( print_time == false){
@@ -144,6 +144,27 @@ int find_lru_repl( page **frame_table, int frames ){
         if( (*frame_table)[i].lru_time < cur_lru_time ){
             index = i;
             cur_lru_time = (*frame_table)[i].lru_time;
+        }
+    }
+
+    return index;
+}
+
+int find_second_chance_repl( page **frame_table, int frames ){
+    
+    int i;
+    int index = -1;
+    long cur_lru_time = (*frame_table)[0].lru_time + 1;
+
+    while( index == -1 ){
+        for( i=0; i < frames; i++ ){
+            if( (*frame_table)[i].second_chance == 1){
+                (*frame_table)[i].second_chance--;
+            }
+            else if( (*frame_table)[i].lru_time < cur_lru_time ){
+                index = i;
+                cur_lru_time = (*frame_table)[i].lru_time;
+            }
         }
     }
 
