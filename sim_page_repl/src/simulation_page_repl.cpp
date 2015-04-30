@@ -8,6 +8,15 @@
 
 const int NUM_ALGS = 6;
 
+/**
+ *  Function: main
+ *
+ *  Author: Dan Nix, Chris Smith
+ *  
+ *  Description: This is the main function to drive the page replacement 
+ *                  simulation. It handles menu options and exiting.
+**/
+
 int main( int argc, char **argv )
 {   
     typedef void (*fp)(void);

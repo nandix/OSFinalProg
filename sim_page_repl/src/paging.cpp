@@ -1,7 +1,14 @@
 #include "../include/paging.h"
 
 
-
+/**
+ *  Function: create_frame_table
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: Creates a table to simulate frames in physical
+ *                  memory given a user supplied size.
+**/
 void create_frame_table( page **frame_table, int *frames )
 {
     int i;
@@ -22,6 +29,14 @@ void create_frame_table( page **frame_table, int *frames )
     }
 }
 
+/**
+ *  Function: create_page_list
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: Generates a random list of pages in a user supplied 
+ *                  range and length.
+**/
 void create_page_list( int *frames, page **page_list, int *pages, int *page_requests ){
 
     int i;
@@ -46,6 +61,15 @@ void create_page_list( int *frames, page **page_list, int *pages, int *page_requ
     }
 }
 
+/**
+ *  Function: page_miss
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: Indicates if the table already has a requested page, if 
+ *                  there is an empty frame to put a new page, or if there
+ *                  was a page miss.
+**/
 int page_miss( page *p, page ** frame_table, int size ){
 
     int i;
@@ -61,6 +85,16 @@ int page_miss( page *p, page ** frame_table, int size ){
 
     return PAGE_MISS;
 }
+
+/**
+ *  Function: insert_in_open
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: If page_miss indicated there was an empty page
+ *                   this function inserts it into the first empty
+ *                   frame
+**/
 
 int insert_in_open( page *p, page ** frame_table, int size ){
     int i;
@@ -83,6 +117,14 @@ int insert_in_open( page *p, page ** frame_table, int size ){
 
 }
 
+/**
+ *  Function: print_frame_table
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: Helper function to print a frame table in an easy-to-read
+ *                   format
+**/
 void print_frame_table(page **frame_table, int frames, bool print_time ){
     int i;
     for( i = 0; i < frames; i++ ){
@@ -98,9 +140,15 @@ void print_frame_table(page **frame_table, int frames, bool print_time ){
 }
 
 
-
-
-
+/**
+ *  Function: find_optimal_repl
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: finds the index of the page to be selected as the victem
+ *                   using the optimal replacement algorithm. It returns 
+ *                   the index of the victim frame.
+**/
 int find_optimal_repl(page **frame_table, page **page_list, int frames, int page_requests, int pos ){
 
     int index = -1;
@@ -134,6 +182,15 @@ int find_optimal_repl(page **frame_table, page **page_list, int frames, int page
     return index;
 }
 
+/**
+ *  Function: find_lru_repl
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: finds the index of the page to be selected as the victem
+ *                   using the LRU replacement algorithm. It returns 
+ *                   the index of the victim frame.
+**/
 int find_lru_repl( page **frame_table, int frames ){
     
     int i;
@@ -150,6 +207,15 @@ int find_lru_repl( page **frame_table, int frames ){
     return index;
 }
 
+/**
+ *  Function: find_lfu_repl
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: finds the index of the page to be selected as the victem
+ *                   using the LFU replacement algorithm. It returns 
+ *                   the index of the victim frame.
+**/
 int find_lfu_repl( page **frame_table, int frames, vector<int> page_counts ){
     int i;
     int index = -1;
@@ -165,6 +231,15 @@ int find_lfu_repl( page **frame_table, int frames, vector<int> page_counts ){
     return index;
 }
 
+/**
+ *  Function: find_second_chance_repl
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: finds the index of the page to be selected as the victem
+ *                   using the second_chance replacement algorithm. It returns 
+ *                   the index of the victim frame.
+**/
 int find_second_chance_repl( page **frame_table, int frames ){
     
     int i;

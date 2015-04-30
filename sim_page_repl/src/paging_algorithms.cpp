@@ -7,6 +7,16 @@
 #include "../include/paging_algorithms.h"
 #endif
 
+/**
+ *  Function: fifo_alg
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: General algorithm for simulating the fifo algorithm.
+                    It sets up simulated memory and page requests and
+                    runs the page requests sequentially and, on page
+                    miss, replaces a frame based on the fifo algorithm.
+**/
 void fifo_alg(void){
 
 	printf("\nRunning %s Replacement Algorithm Simulation\n\n", "FIFO");
@@ -80,7 +90,16 @@ void fifo_alg(void){
 
 }
 
-
+/**
+ *  Function: optimal_alg
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: General algorithm for simulating the optimal algorithm.
+                    It sets up simulated memory and page requests and
+                    runs the page requests sequentially and, on page
+                    miss, replaces a frame based on the optimal algorithm.
+**/
 void optimal_alg(void){
 
 	printf("\nRunning %s Replacement Algorithm Simulation\n\n", "Optimal");
@@ -151,6 +170,17 @@ void optimal_alg(void){
     free(frame_table);
 }
 
+
+/**
+ *  Function: lru_alg
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: General algorithm for simulating the lru algorithm.
+                    It sets up simulated memory and page requests and
+                    runs the page requests sequentially and, on page
+                    miss, replaces a frame based on the lru algorithm.
+**/
 void lru_alg(void){
 
 	printf("\nRunning %s Replacement Algorithm Simulation\n\n", "LRU");
@@ -226,7 +256,16 @@ void lru_alg(void){
 
 }
 
-
+/**
+ *  Function: lfu_alg
+ *
+ *  Author: Dan Nix
+ *  
+ *  Description: General algorithm for simulating the lfu algorithm.
+                    It sets up simulated memory and page requests and
+                    runs the page requests sequentially and, on page
+                    miss, replaces a frame based on the lfu algorithm.
+**/
 void lfu_alg(void){
 	printf("\nRunning %s Replacement Algorithm Simulation\n\n", "LFU");
 	
@@ -308,7 +347,16 @@ void lfu_alg(void){
 }
 
 
-
+/**
+ *  Function: second_chance_alg
+ *
+ *  Author: Dan Nix, Matt Reas
+ *  
+ *  Description: General algorithm for simulating the second chance algorithm.
+                    It sets up simulated memory and page requests and
+                    runs the page requests sequentially and, on page
+                    miss, replaces a frame based on the second chance algorithm.
+**/
 void second_chance_alg(void){
 
 	printf("\nRunning %s Replacement Algorithm Simulation\n\n", "Second Chance");

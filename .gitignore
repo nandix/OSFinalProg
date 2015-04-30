@@ -2,3 +2,9 @@ dash
 *.o
 ExampleCode/*
 sim_page_repl/paging_simulation
+
+DocPageRepl/prog3_page_repl_sim.aux
+DocPageRepl/prog3_page_repl_sim.log
+#DocPageRepl/prog3_page_repl_sim.pdf
+DocPageRepl/prog3_page_repl_sim.synctex.gz
+
