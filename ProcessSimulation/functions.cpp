@@ -212,10 +212,8 @@ void setProcessesSJF(int num)
 void FCFSSimulation(int table[][3], int totalBurst, int num)
 {
 	queue<int> pqueue;
-	int time = 0;
 	int currentProcess;
 	int length = 0;
-	bool running = false;
 
 	cout << "\nBeginning simulation...\n";
 	cout << "In First Come First Serve process scheduling, process are ran\n";
@@ -254,15 +252,116 @@ void FCFSSimulation(int table[][3], int totalBurst, int num)
 		cout << "\n\n";
 		pqueue.pop();
 	}
+
 }
 
 void SJFSimulation(int table[][3], int totalBurst, int num)
 {
-	cout << "Beginning simulation...\n";
+	queue<int> pqueue;
+	int tableCopy[num][3];
+	int currentProcess;
+	int smallestA;
+	int smallestB;
+	int smallestIndex = 0;
+	int length = 0;
+	cout << "\nBeginning simulation...\n";
+	cout << "In Shortest Job First process scheduling, the processes that have\n";
+	cout << "the smallest burst and have arrived are executed first. If a\n";
+	cout << "process is already running they are put in a queue and will be\n";
+	cout << "executed once the other process has finished.\n\n"; 
+
+
+	for (int i = 0; i < num; i++)
+	{
+		tableCopy[i][0] = table[i][0];
+		tableCopy[i][1] = table[i][1];
+	}
+
+	for (int i = 0; length != num ; i++)
+	{
+		// Set smallest to p0
+		smallestA = tableCopy[0][0];
+		smallestB = tableCopy[0][1];
+		smallestIndex = 0;
+		for (int j = 0; j < num; j++)
+		{
+			// Find smallest arrival and burst and put into queue
+			
+			if (tableCopy[j][0] <= smallestA && tableCopy[j][1] <= smallestB)
+			{
+				smallestA = tableCopy[j][0];
+				smallestB = tableCopy[j][1];
+				smallestIndex = j;
+			}
+		}
+		pqueue.push(smallestIndex);
+		//cout << "Added " << smallestIndex << " to queue.\n";
+		//cout << "Smallest found is p" << smallestIndex << endl;
+		tableCopy[smallestIndex][0] = INT_MAX;
+		tableCopy[smallestIndex][1] = INT_MAX;
+		length++;
+	}
+
+	int i = 0;
+
+	while (!pqueue.empty())
+	{
+		currentProcess = pqueue.front();
+		if ( table[currentProcess][0] > i)
+		{
+			cout << "Idle from time " << i << " to " << table[currentProcess][0] << "\n\n";
+			i = table[currentProcess][0];
+		}
+		cout << "Starting to run p" << currentProcess << " at time " << i << endl;
+		i += table[currentProcess][1];
+		cout << "Finishing p" << currentProcess << " at time " << i;
+		cout << "\n\n";
+		pqueue.pop();
+	}
 }
 
 void RRSimulation(int table[][3], int totalBurst, int num, int quantum)
 {
-	cout << "Beginning simulation...\n";
+	queue<int> pqueue;
+	int currentProcess;
+	int length = 0;
+
+	cout << "\nBeginning simulation...\n";
+	cout << "In Round Robin process scheduling...\n\n";
+
+	for (int i = 0; length != num ; i++)
+	{
+		for (int j = 0; j < num; j++)
+		{
+			
+			// If Arrival is at current time add to queue
+			if (table[j][0] == i)
+			{
+				pqueue.push(j);
+				length++;
+				cout << "Added " << j << " to queue.\n";
+			}
+		}
+	}
+
+	int i = 0;
+	while (!pqueue.empty())
+	{
+		currentProcess = pqueue.front();
+		if (i % quantum == 0)
+		{
+
+		}
+		if ( table[currentProcess][0] > i)
+		{
+			cout << "Idle from time " << i << " to " << table[currentProcess][0] << "\n\n";
+			i = table[currentProcess][0];
+		}
+		cout << "Starting to run p" << currentProcess << " at time " << i << endl;
+		i += table[currentProcess][1];
+		cout << "Finishing p" << currentProcess << " at time " << i;
+		cout << "\n\n";
+		pqueue.pop();
+	}
 }
 
