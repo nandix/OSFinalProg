@@ -65,3 +65,47 @@ void paging_algorithm( int *page_table, int * pages, int *frame_table, int *fram
         printf("Entry not found in page table. Tried accessing %d.\n\n", *p);
 }
 */
+
+int page_miss( page *p, page ** frame_table, int size ){
+
+    int i;
+    for( i=0; i<size; i++ ){
+        if( (*frame_table)[i].page_num == (*p).page_num ){
+            return PAGE_IN_TABLE;
+        }
+        else if( (*frame_table)[i].page_num == -1 ){
+            return EMPTY_FRAME;
+        }
+    }
+
+    return PAGE_MISS;
+}
+
+int insert_in_open( page *p, page ** frame_table, int size ){
+    int i;
+
+    for( i=0; i<size; i++ ){
+
+        if( (*frame_table)[i].page_num == (*p).page_num ){
+            printf( "Already in page table\n");
+            return i;
+        }
+        if( (*frame_table)[i].page_num == -1 ){
+
+            (*p).frame_num = i;
+            (*frame_table)[i] = *p;
+            return i;
+        }
+    }
+
+    return -1;
+
+}
+
+void print_frame_table(page **frame_table, int frames){
+    int i;
+    for( i = 0; i < frames; i++ ){
+        printf("Frame %d: P(%d) F(%d)\n", 
+            i, (*frame_table)[i].page_num, (*frame_table)[i].frame_num );
+    }
+}
