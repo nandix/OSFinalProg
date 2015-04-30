@@ -23,10 +23,10 @@ VPATH = src
 # MAKE allows the use of "wildcards", to make writing compilation instructions
 # a bit easier. GNU make uses $@ for the target and $^ for the dependencies.
 
-all:    mmu_simulation
+all:    paging_simulation
 
 # specific targets
-mmu_simulation: simulation_mmu.o reloc.o tlb.o paging.o
+paging_simulation: simulation_page_repl.o  paging_algorithms.o paging.o
 	$(LINK) $(CFLAGS) $^ -o $@
 
 #bio_inspired_hw:	main.o bone_marrow.o hill_climbing.o  fit_func.o particle_swarm.o simulated_annealing.o genetic_programming.o

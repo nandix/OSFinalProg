@@ -1,1 +1,4 @@
 dash
+*.o
+ExampleCode/*
+sim_page_repl/paging_simulation
