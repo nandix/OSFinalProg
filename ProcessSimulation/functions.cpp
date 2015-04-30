@@ -90,7 +90,7 @@ void setProcessesRR(int num)
 	int totalBurst = 0;
 	cout << "Please enter a quantum between 1 and 20: ";
 	cin >> quantum;
-	if (quantum < 0 || quantum > 20)
+	if (quantum < 1 || quantum > 20)
 	{
 		cout << "Invalid Quantum\n";
 		return;
@@ -339,29 +339,54 @@ void RRSimulation(int table[][3], int totalBurst, int num, int quantum)
 			{
 				pqueue.push(j);
 				length++;
-				cout << "Added " << j << " to queue.\n";
+				//cout << "Added " << j << " to queue.\n";
 			}
 		}
 	}
 
 	int i = 0;
+	int temp = 0;
 	while (!pqueue.empty())
 	{
 		currentProcess = pqueue.front();
-		if (i % quantum == 0)
-		{
-
-		}
 		if ( table[currentProcess][0] > i)
 		{
-			cout << "Idle from time " << i << " to " << table[currentProcess][0] << "\n\n";
-			i = table[currentProcess][0];
+			cout << "Idle from time " << i << " to " << i + quantum << "\n\n";
+			i += quantum;
+			continue;
 		}
 		cout << "Starting to run p" << currentProcess << " at time " << i << endl;
-		i += table[currentProcess][1];
-		cout << "Finishing p" << currentProcess << " at time " << i;
-		cout << "\n\n";
-		pqueue.pop();
+		i += quantum;
+		if (table[currentProcess][1] > 0 && table[currentProcess][1] - quantum > 0)
+		{
+			cout << "Stopping p" << currentProcess << " at time " << i;
+			cout << "\n\n";
+		}
+		else
+		{
+			if (table[currentProcess][1] - quantum == 0)
+				cout << "Finishing p" << currentProcess << " at time " << i;
+			else
+			{
+				cout << "Finishing p" << currentProcess << " at time " << i - table[currentProcess][1] << endl;
+				cout << "Idle from time " << i - table[currentProcess][1] << " to " << (i - table[currentProcess][1]) + (quantum - table[currentProcess][1]) << "\n\n";
+			}
+			cout << "\n\n";
+			pqueue.pop();
+			continue;
+		}
+		if (i % quantum == 0)
+		{
+			temp = pqueue.front();
+			pqueue.pop();
+			table[currentProcess][1] -= quantum;
+			if (table[currentProcess][1] > 0)
+			{
+				pqueue.push(temp);
+			}
+			currentProcess = pqueue.front();
+		}
+
 	}
 }
 
