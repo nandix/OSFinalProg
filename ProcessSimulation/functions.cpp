@@ -327,7 +327,11 @@ void RRSimulation(int table[][3], int totalBurst, int num, int quantum)
 	int length = 0;
 
 	cout << "\nBeginning simulation...\n";
-	cout << "In Round Robin process scheduling...\n\n";
+	cout << "In Round Robin process scheduling a quantum is added, which is \n";
+	cout << "a block of time that a process will run before starting the \n";
+	cout << "next process in the queue. If there are no processes that have \n";
+	cout << "arrived yet the system is idle for that quantum. Round Robin \n";
+	cout << "trys to make sure every process gets a reasonable response time.\n\n";
 
 	for (int i = 0; length != num ; i++)
 	{
@@ -368,8 +372,8 @@ void RRSimulation(int table[][3], int totalBurst, int num, int quantum)
 				cout << "Finishing p" << currentProcess << " at time " << i;
 			else
 			{
-				cout << "Finishing p" << currentProcess << " at time " << i - table[currentProcess][1] << endl;
-				cout << "Idle from time " << i - table[currentProcess][1] << " to " << (i - table[currentProcess][1]) + (quantum - table[currentProcess][1]) << "\n\n";
+				cout << "Finishing p" << currentProcess << " at time " << ((table[currentProcess][1] - quantum) + i) << endl;
+				cout << "Idle from time " << ((table[currentProcess][1] - quantum) + i) << " to " << ((table[currentProcess][1] - quantum) + i) + (quantum - table[currentProcess][1]);
 			}
 			cout << "\n\n";
 			pqueue.pop();
