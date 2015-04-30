@@ -99,18 +99,8 @@ void setProcessesRR(int num)
 	{
 		cout << "Please input an arrival time for process " << i << ": ";
 		cin >> arrival;
-		if (arrival < 0 || arrival > 50)
-		{
-			cout << "Invalid input. Exiting.\n";
-			return;
-		}
 		cout << "Please input a burst time for process " << i << ": ";
 		cin >> burst;
-		if (burst < 0 || burst > 50)
-		{
-			cout << "Invalid input. Exiting.\n";
-			return;
-		}
 		procArray[i][0] = arrival;
 		procArray[i][1] = burst;
 	}
@@ -138,18 +128,8 @@ void setProcessesFCFS(int num)
 	{
 		cout << "Please input an arrival time for process " << i << ": ";
 		cin >> arrival;
-		if (arrival < 0 || arrival > 50)
-		{
-			cout << "Invalid input. Exiting.\n";
-			return;
-		}
 		cout << "Please input a burst time for process " << i << ": ";
 		cin >> burst;
-		if (burst < 0 || burst > 50)
-		{
-			cout << "Invalid input. Exiting.\n";
-			return;
-		}
 		procArray[i][0] = arrival;
 		procArray[i][1] = burst;
 	}
@@ -177,18 +157,8 @@ void setProcessesSJF(int num)
 	{
 		cout << "Please input an arrival time for process " << i << ": ";
 		cin >> arrival;
-		if (arrival < 0 || arrival > 50)
-		{
-			cout << "Invalid input. Exiting.\n";
-			return;
-		}
 		cout << "Please input a burst time for process " << i << ": ";
 		cin >> burst;
-		if (burst < 0 || burst > 50)
-		{
-			cout << "Invalid input. Exiting.\n";
-			return;
-		}
 		procArray[i][0] = arrival;
 		procArray[i][1] = burst;
 	}
@@ -211,13 +181,14 @@ void FCFSSimulation(int table[][3], int totalBurst, int num)
 	queue<int> pqueue;
 	int time = 0;
 	int currentProcess;
+	int length = 0;
 	bool running = false;
 
 	cout << "\nBeginning simulation...\n";
 	cout << "In First Come First Serve process scheduling process are ran\n";
 	cout << "As soon as they arrive.\n\n";
 
-	for (int i = 0; i <= totalBurst; i++)
+	for (int i = 0; length != num ; i++)
 	{
 		for (int j = 0; j < num; j++)
 		{
@@ -226,27 +197,27 @@ void FCFSSimulation(int table[][3], int totalBurst, int num)
 			if (table[j][0] == i)
 			{
 				pqueue.push(j);
+				length++;
 				//cout << "Added " << j << " to queue.\n";
 			}
 		}
 	}
 	
-	for (int i = 0; i < totalBurst;)
-	{
-		if (!pqueue.empty())
-		{
-			currentProcess = pqueue.front();
-			if ( table[currentProcess][0] > i)
-			{
-				i = table[currentProcess][0];
-			}
-			cout << "Starting to run p" << currentProcess << " at time " << i << endl;
-			i += table[currentProcess][1];
-			cout << "Finishing p" << currentProcess << " at time " << i;
-			cout << "\n\n";
-			pqueue.pop();
-		}
-	}
+	int i = 0;
 
+	while (!pqueue.empty())
+	{
+		currentProcess = pqueue.front();
+		if ( table[currentProcess][0] > i)
+		{
+			cout << "Idle from time " << i << " to " << table[currentProcess][0] << "\n\n";
+			i = table[currentProcess][0];
+		}
+		cout << "Starting to run p" << currentProcess << " at time " << i << endl;
+		i += table[currentProcess][1];
+		cout << "Finishing p" << currentProcess << " at time " << i;
+		cout << "\n\n";
+		pqueue.pop();
+	}
 }
 
