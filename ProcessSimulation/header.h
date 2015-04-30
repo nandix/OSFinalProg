@@ -1,11 +1,11 @@
 // dirent.h is used for directories
-#include <iostream>
-#include <stdlib.h>
-#include <queue>
+#include <iostream> // Used for standard input and output
+#include <queue> // Used for queue's
 #include <limits.h> // Used for MAX_INT
 
 
 
+// Function Prototypes
 void MainMenu();
 void RoundRobin();
 void FirstComeFirstServe();
