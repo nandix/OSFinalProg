@@ -215,8 +215,10 @@ void FCFSSimulation(int table[][3], int totalBurst, int num)
 	bool running = false;
 
 	cout << "\nBeginning simulation...\n";
-	cout << "In First Come First Serve process scheduling process are ran\n";
-	cout << "As soon as they arrive.\n\n";
+	cout << "In First Come First Serve process scheduling, process are ran\n";
+	cout << "as soon as they arrive if they can. If not they are added to a\n";
+	cout << "queue and are executed once the other process finishes. If \n";
+	cout << "nothing is in the queue the system is idle.\n\n";
 
 	for (int i = 0; length != num ; i++)
 	{
