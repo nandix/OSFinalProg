@@ -1,3 +1,19 @@
+ /************************************************************************
+   Program: MMU Simulator
+   File: reloc.cpp
+   Author: Christopher Smith, Dan Nix, Matt Rames
+   Class: Operating Systems
+   Instructor:Dr. Karlsson
+   Date: 30 April 2015
+   
+   Description:    This file contains the function associated with the 
+   relocation register
+   
+   Input: Prompt driven
+   Output:The current logical address and then the physical address after 
+   relocation register, and seg fault if memory is accessed greater than 
+   the MAX plus Relocation.
+ ************************************************************************/
 #include "../include/reloc.h"
 void relocation_register(void)
 {
