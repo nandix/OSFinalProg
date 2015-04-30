@@ -28,6 +28,8 @@ void access_physical_mem( const int *d, const int *frame, const int *frames, con
 int page_miss( page *p, page ** frame_table, int size );
 int insert_in_open( page *p, page ** frame_table, int size );
 
+int find_optimal_repl(page **frame_table, page **page_list, int frames, int pages, int i );
+
 void print_frame_table(page **frame_table, int frames);
 
 

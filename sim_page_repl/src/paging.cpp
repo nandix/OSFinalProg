@@ -4,7 +4,7 @@
 
 void create_frame_table( page **frame_table, int *frames )
 {
-    int count, tmp, i;
+    int i;
     do
     {
         printf("How many frames are to be implemented (>4): ");
@@ -24,7 +24,7 @@ void create_frame_table( page **frame_table, int *frames )
 
 void create_page_list( int *frames, page **page_list, int *pages, int *page_requests ){
 
-    int count, tmp, i;
+    int i;
     do
     {
         printf("How many different pages are to be implemented (>%d): ", *frames);
@@ -45,26 +45,6 @@ void create_page_list( int *frames, page **page_list, int *pages, int *page_requ
         (*page_list)[i] = temp;
     }
 }
-/*
-void paging_algorithm( int *page_table, int * pages, int *frame_table, int *frames, int *page_size, int *p, int *d )
-{
-    int i;
-    bool found = false;
-
-    printf( "Looking for %d in page table:\n", *p);
-    for( i = 0; i < *pages && !found; i++)
-    {
-        if( i == *p )
-        {
-            found = true;
-            printf("Entry found in page %d.\nAccessing frame %d with offset of %d bytes\n", i, page_table[i], *d);
-            access_physical_mem( d, &page_table[i], frames, page_size);
-        }
-    }
-    if(!found)
-        printf("Entry not found in page table. Tried accessing %d.\n\n", *p);
-}
-*/
 
 int page_miss( page *p, page ** frame_table, int size ){
 
@@ -108,4 +88,36 @@ void print_frame_table(page **frame_table, int frames){
         printf("Frame %d: P(%d) F(%d)\n", 
             i, (*frame_table)[i].page_num, (*frame_table)[i].frame_num );
     }
+}
+
+
+
+
+
+int find_optimal_repl(page **frame_table, page **page_list, int frames, int pages, int pos ){
+
+    int index = -1;
+    int longest = 0;
+    int count;
+
+    int i,j;
+
+    for( i=0; i<frames; i++ ){
+        count = 0;
+        for( j=pos+1; j<pages; j++ ){
+            if( (*page_list)[j].page_num != (*frame_table)[i].page_num ){
+                count++;
+            }
+            else{
+                break;
+            }
+        }
+        if( count > longest ){
+            longest = count;
+            index = i;
+            continue;
+        }
+    }
+
+    return index;
 }
