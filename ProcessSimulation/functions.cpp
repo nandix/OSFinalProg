@@ -99,8 +99,18 @@ void setProcessesRR(int num)
 	{
 		cout << "Please input an arrival time for process " << i << ": ";
 		cin >> arrival;
+		if (arrival < 0)
+		{
+			cout << "Invalid input\n";
+			return;
+		}
 		cout << "Please input a burst time for process " << i << ": ";
 		cin >> burst;
+		if (burst < 1)
+		{
+			cout << "Invalid input\n";
+			return;
+		}
 		procArray[i][0] = arrival;
 		procArray[i][1] = burst;
 	}
@@ -128,8 +138,18 @@ void setProcessesFCFS(int num)
 	{
 		cout << "Please input an arrival time for process " << i << ": ";
 		cin >> arrival;
+		if (arrival < 0)
+		{
+			cout << "Invalid input\n";
+			return;
+		}
 		cout << "Please input a burst time for process " << i << ": ";
 		cin >> burst;
+		if (burst < 1)
+		{
+			cout << "Invalid input\n";
+			return;
+		}
 		procArray[i][0] = arrival;
 		procArray[i][1] = burst;
 	}
@@ -157,8 +177,18 @@ void setProcessesSJF(int num)
 	{
 		cout << "Please input an arrival time for process " << i << ": ";
 		cin >> arrival;
+		if (arrival < 0)
+		{
+			cout << "Invalid input\n";
+			return;
+		}
 		cout << "Please input a burst time for process " << i << ": ";
 		cin >> burst;
+		if (burst < 1)
+		{
+			cout << "Invalid input\n";
+			return;
+		}
 		procArray[i][0] = arrival;
 		procArray[i][1] = burst;
 	}
