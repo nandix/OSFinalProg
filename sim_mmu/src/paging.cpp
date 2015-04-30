@@ -1,5 +1,25 @@
-#include "../include/paging.h"
+ /************************************************************************
+   Program: MMU Simulator
+   File: paging.cpp
+   Author: Christopher Smith, Dan Nix, Matt Rames
+   Class: Operating Systems
+   Instructor:Dr. Karlsson
+   Date: 30 April 2015
+   
+   Description:    This file contains all the code for the basic paging algorithm
+   Input: Prompt driven
+   Output: The page and associated frames, The offset that will access 
+   within a frame and if it stays within the current frame or is in another frame.
+ ************************************************************************/
 
+
+#include "../include/paging.h"
+/************************************************************************
+*   Function: void paging(void)
+*   Description: This is the start of the paging algorith and will call
+*   the function for user input to give page and frame information. It
+*   then will ask how many iterations (simulations) to run.
+************************************************************************/
 void paging(void)
 {
     //page and frame table arrays
@@ -25,9 +45,14 @@ void paging(void)
     }
     free(page_table);
     free(frame_table);
-
 }
-
+/************************************************************************
+*   Function: page_table_sizes( int **page_table, int *pages, int **frame_table,
+*                               int *frames, int *page_size )
+*   Description: This function gets the user input for frames and pages 
+*   and the block size of the two. Also will display the page table and 
+*   what frames they reference.
+************************************************************************/
 void page_table_sizes( int **page_table, int *pages, int **frame_table, int *frames, int *page_size )
 {
     int count, tmp, i;
@@ -74,7 +99,12 @@ void page_table_sizes( int **page_table, int *pages, int **frame_table, int *fra
         printf("Entry %d refrences %d frame in physical memory\n",i,(*page_table)[i]);
     printf("\n");
 }
-
+/************************************************************************
+*   Function: void paging(void)
+*   Description: This function will find the page in the page table and
+*   display that it is accessing a frame with a certain offset and call
+*   the access_physical_mem function.
+************************************************************************/
 void paging_algorithm( int *page_table, int * pages, int *frame_table, int *frames, int *page_size, int *p, int *d )
 {
     int i;
@@ -93,6 +123,11 @@ void paging_algorithm( int *page_table, int * pages, int *frame_table, int *fram
     if(!found)
         printf("Entry not found in page table. Tried accessing %d.\n\n", *p);
 }
+/************************************************************************
+*   Function: void paging(void)
+*   Description: This function will find the page in the frame table and
+*   attempt to access the frame with the offset displays if successful
+************************************************************************/
 
 void access_physical_mem( const int *d, const int *frame, const int *frames, const int *page_size)
 {

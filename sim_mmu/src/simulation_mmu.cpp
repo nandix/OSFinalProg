@@ -1,3 +1,27 @@
+ /************************************************************************
+   Program: MMU Simulator
+   Author: Christopher Smith, Dan Nix, Matt Rames
+   Class: Operating Systems
+   Instructor:Dr. Karlsson
+   Date: 30 April 2015
+   
+   Description:    This program simulates the memory management unit and
+   the different methods for accessing physical memory with logical memory.
+   It implements the simple relocation register that is just an offset. and the
+   paging scheme without a TLB as well as a version with the TLB. The TLB simulates
+   if there is a miss the replacement schemes of random, round robin, and least recently used.
+   
+   Input: Prompt driven
+   Output:What the physical memory getting, accessed the pages and associated frames, tlb table after every replacement
+   
+   Compilation instructions: make
+   Usage: mmu_simulation or ./mmu_simulation
+   
+   Known bugs/missing features:No known bugs
+ ************************************************************************/
+
+
+
 #include "../include/tlb.h"
 #include "../include/reloc.h"
 #include "../include/paging.h"
