@@ -1,5 +1,23 @@
+ /************************************************************************
+   Program: Process Scheduling Simulator
+   File: functions.cpp
+   Author: Christopher Smith, Dan Nix, Matt Rames
+   Class: Operating Systems
+   Instructor:Dr. Karlsson
+   Date: 30 April 2015
+   
+   Description: This file contains all of the functions needed to run the
+				various simulations.
+ ************************************************************************/
 #include "header.h"
 
+/************************************************************************
+*   Function: void MainMenu()
+*   Description: This function prompts the user to make a selection
+*   between the 3 different simulations or exit the application. Once
+*  	the user makes a selection the function well call the assoicated 
+*   function. 
+************************************************************************/
 void MainMenu()
 {
 	// Print menu prompt
@@ -32,6 +50,12 @@ void MainMenu()
 	}
 }
 
+/************************************************************************
+*   Function: void RoundRobin()
+*   Description: This is the starting point of the Round Robin simulation
+*	this function prompts the user for how many processes they want and
+* 	passes the result to the next stage of the simulation.
+************************************************************************/
 void RoundRobin()
 {
 	int procNumber = 0;
@@ -49,6 +73,12 @@ void RoundRobin()
 	}
 }
 
+/************************************************************************
+*   Function: void FirstComeFirstServe()
+*   Description: This is the starting point of the FCFS simulation
+*	this function prompts the user for how many processes they want and
+* 	passes the result to the next stage of the simulation.
+************************************************************************/
 void FirstComeFirstServe()
 {
 	int procNumber = 0;
@@ -66,6 +96,12 @@ void FirstComeFirstServe()
 	}
 }
 
+/************************************************************************
+*   Function: void ShortestJobFirst()
+*   Description: This is the starting point of the SJF simulation
+*	this function prompts the user for how many processes they want and
+* 	passes the result to the next stage of the simulation.
+************************************************************************/
 void ShortestJobFirst()
 {
 	int procNumber = 0;
@@ -84,6 +120,14 @@ void ShortestJobFirst()
 
 }
 
+/************************************************************************
+*   Function: void setProcessesRR(int num)
+*   Description: This function prompts the user to enter a quantum as
+*	well as the arrival time and burst time for each process. After
+* 	the user has entered the information the process table is made. 
+* 	All the information is then sent to the RR simulation function
+* 	to preform the simulation.
+************************************************************************/
 void setProcessesRR(int num)
 {
 	int procArray[num][3];
@@ -139,6 +183,14 @@ void setProcessesRR(int num)
 	RRSimulation(procArray, totalBurst, num, quantum);
 }
 
+/************************************************************************
+*   Function: void setProcessesFCFS(int num)
+*   Description: This function prompts the user to enter the 
+*	arrival time and burst time for each process. After
+* 	the user has entered the information the process table is made. 
+* 	All the information is then sent to the FCFS simulation function
+* 	to preform the simulation.
+************************************************************************/
 void setProcessesFCFS(int num)
 {
 	int procArray[num][3];
@@ -184,6 +236,14 @@ void setProcessesFCFS(int num)
 	FCFSSimulation(procArray, totalBurst, num);
 }
 
+/************************************************************************
+*   Function: void setProcessesSJF(int num)
+*   Description: This function prompts the user to enter the 
+*	arrival time and burst time for each process. After
+* 	the user has entered the information the process table is made. 
+* 	All the information is then sent to the SJF simulation function
+* 	to preform the simulation.
+************************************************************************/
 void setProcessesSJF(int num)
 {
 	int procArray[num][3];
@@ -228,6 +288,12 @@ void setProcessesSJF(int num)
 	SJFSimulation(procArray, totalBurst, num);
 }
 
+/************************************************************************
+*   Function: void FCFSSimulation(int table[][3], int totalBurst, int num)
+*   Description:This function outputs how the FCFS simulation works and 
+* 	also outputs each step as processes are ran. It outputs when a process
+* 	starts and finishes and will also output if the system is idle. 
+************************************************************************/
 void FCFSSimulation(int table[][3], int totalBurst, int num)
 {
 	queue<int> pqueue;
@@ -280,6 +346,12 @@ void FCFSSimulation(int table[][3], int totalBurst, int num)
 
 }
 
+/************************************************************************
+*   Function: void SJFSimulation(int table[][3], int totalBurst, int num)
+*   Description: This function outputs how the SJF simulation works and 
+* 	also outputs each step as processes are ran. It outputs when a process
+* 	starts and finishes and will also output if the system is idle. 
+************************************************************************/
 void SJFSimulation(int table[][3], int totalBurst, int num)
 {
 	queue<int> pqueue;
@@ -355,6 +427,13 @@ void SJFSimulation(int table[][3], int totalBurst, int num)
 	}
 }
 
+/************************************************************************
+*   Function: void RRSimulation(int table[][3], 
+								int totalBurst, int num, int quantum)
+*   Description: This function outputs how the RR simulation works and 
+* 	also outputs each step as processes are ran. It outputs when a process
+* 	starts, stops, and finishes and will also output if the system is idle.
+************************************************************************/
 void RRSimulation(int table[][3], int totalBurst, int num, int quantum)
 {
 	queue<int> pqueue;
