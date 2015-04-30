@@ -87,6 +87,7 @@ void setProcessesRR(int num)
 	int arrival;
 	int burst;
 	int quantum;
+	int totalBurst = 0;
 	cout << "Please enter a quantum between 1 and 20: ";
 	cin >> quantum;
 	if (quantum < 0 || quantum > 20)
@@ -94,7 +95,6 @@ void setProcessesRR(int num)
 		cout << "Invalid Quantum\n";
 		return;
 	}
-	cout << "\nPlease enter values between 0 and 50\n";
 	for(int i = 0; i < num; i++)
 	{
 		cout << "Please input an arrival time for process " << i << ": ";
@@ -123,9 +123,10 @@ void setProcessesRR(int num)
 		cout << "p" << i << "		";
 		cout << procArray[i][0] <<  "		";
 		cout << procArray[i][1] << endl;
+		totalBurst += procArray[i][1];
 	}
 	
-	cout << "Beginning simulation...\n";
+	RRSimulation(procArray, totalBurst, num, quantum);
 }
 
 void setProcessesFCFS(int num)
@@ -173,6 +174,7 @@ void setProcessesSJF(int num)
 	int procArray[num][3];
 	int arrival;
 	int burst;
+	int totalBurst = 0;
 	for(int i = 0; i < num; i++)
 	{
 		cout << "Please input an arrival time for process " << i << ": ";
@@ -201,9 +203,10 @@ void setProcessesSJF(int num)
 		cout << "p" << i << "		";
 		cout << procArray[i][0] <<  "		";
 		cout << procArray[i][1] << endl;
+		totalBurst += procArray[i][1];
 	}
 	
-	cout << "Beginning simulation...\n";
+	SJFSimulation(procArray, totalBurst, num);
 }
 
 void FCFSSimulation(int table[][3], int totalBurst, int num)
@@ -251,5 +254,15 @@ void FCFSSimulation(int table[][3], int totalBurst, int num)
 		cout << "\n\n";
 		pqueue.pop();
 	}
+}
+
+void SJFSimulation(int table[][3], int totalBurst, int num)
+{
+	cout << "Beginning simulation...\n";
+}
+
+void RRSimulation(int table[][3], int totalBurst, int num, int quantum)
+{
+	cout << "Beginning simulation...\n";
 }
 
