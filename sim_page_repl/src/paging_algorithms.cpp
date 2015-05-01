@@ -384,7 +384,7 @@ void second_chance_alg(void){
     temp.page_num = -1;
 
     printf("Initial frame table!\n");
-    print_frame_table( &frame_table, frames, true);
+    print_frame_table( &frame_table, frames, false);
 
 
     for( i = 0; i < page_requests; i++ )
@@ -405,80 +405,6 @@ void second_chance_alg(void){
         	
         	// frame_table[repl_index] = page_list[i];
         	// printf("Replace page at frame %d.\n", page_list[i].frame_num);
-        	print_frame_table(&frame_table, frames, true);
-        }
-
-        else if( page_request_key == PAGE_IN_TABLE ){
-        	printf("Page already in table! No replacement necessary!\n");
-        	print_frame_table(&frame_table, frames, true);
-        }
-
-        else if( page_request_key == EMPTY_FRAME){
-        	printf("Empty Frame Found!\n" );
-        	page_list[i].lru_time = clock();
-        	page_list[i].second_chance = 1;
-        	// page_list[i].frame_num = insert_in_open(&page_list[i], &frame_table, frames);
-        	insert_in_open(&page_list[i], &frame_table, frames);
-        	print_frame_table(&frame_table, frames, true);
-        }
-
-        else{
-        	printf("Oops! Something weird happened!\n");
-        }
-
-        sleep(1);
-    }
-
-
-    printf( "\nFinal page table: \n");
-    print_frame_table( &frame_table, frames, true );
-
-    free(page_list);
-    free(frame_table);
-
-}
-
-// Do we need this?
-void clock_alg(void){
-
-	printf("\nRunning %s Replacement Algorithm Simulation\n\n", "Clock");
-	
-	//Create table to simulate frames
-    page *frame_table;
-
-    // Create table to simulate list lookup
-    page *page_list;
-    page temp;
-    //number of pages/frames
-    int pages, frames;
-    int page_requests;
-    int page_request_key;
-
-    //number of simulations to run
-    int repl_index;
-    int i;
-
-    //Generate a mock frame table, list of pages, list of pages to be requested
-    create_frame_table( &frame_table, &frames );
-    create_page_list( &frames, &page_list, &pages, &page_requests );
-
-    // Create the fifo queue
-    temp.page_num = -1;
-
-    printf("Initial frame table!\n");
-    print_frame_table( &frame_table, frames, true);
-
-
-    for( i = 0; i < page_requests; i++ )
-    {
-    	printf("\nRequesting page %d\n", page_list[i].page_num);
-    	page_request_key = page_miss( &page_list[i], &frame_table, frames);
-
-        if(  page_request_key == PAGE_MISS ){
-        	printf("Request for page %d was a miss!\n", (page_list[i]).page_num);
-
-        	// INSERT CLOCK REPLACEMENT ALGORITHM FOR A PAGE MISS HERE
-        	
         	print_frame_table(&frame_table, frames, true);
         }
 
