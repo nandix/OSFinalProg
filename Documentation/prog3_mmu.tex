@@ -1,0 +1,85 @@
+\title{Operating Systems, Program 3 \\ D-shell Shared Memory}
+\author{Daniel Nix}
+\date{\today}
+
+\documentclass[11pt]{article}
+
+\usepackage{multicol}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+
+\usepackage{etex}
+%\usepackage{todonotes}
+
+\begin{document}
+\maketitle
+
+
+\begin{multicols}{2}
+
+\paragraph{Program Description}
+The MMU-Simulation program is a simple implementation of the memory management unit (mmu) that simulates the relocation register, paging, and paging with a Transition Look-Aside Buffer (TLB). The purpose of this programe is to simulate the different methods of mmu.
+\begin{itemize}
+\item 	Creates a section of memory to run in or pages for paging and the tlb
+
+\item	Creates a offset to access the memory by and a page for paging and the tlb
+
+\item	Accesses physical memory with the given offset or a page with given offset
+
+\item	Successful if offset doesn't overstep bounds of max or frame size
+\end{itemize}
+
+\section{Algorithm}\label{algorithm}
+\subsection{Event Loop}\label{event_loop}
+The event loop is handled in main and uses an array of function pointers to call the relocation register, paging, and tlb functions. The event loop gets the user input with 1 being relocation register, input of 2 is paging, input of 3 is tlb, and 4 exiting the program. Any other number input causes an error message to be displayed and redisplays the prompt.
+
+\subsection{Relocation Register}
+To implement the relocation register a logical max is created. Then the offset for physical memory is created which will be used as the relocation register. Last a offset to access memory is created and used to see if it stays within the bounds of the physical min and max of memory.
+
+\subsection{Paging}
+To implement paging the user is asked to enter how many frames that are to be implemented, how many pages to implent with pages being less than or equal to the number of frames. Next page and frame size is asked to be a power of two. The page table is then displayed to the user so they know what page is referencing what frame. Once everything is set up the algorithm starts creating random pages and random offsets that are used to access physical memory. If the offset is less then the page size the frame was accessed successfully, if it wasn't then it is checked if it goes into another frame or out of physical memory. This occurs a number of iterations that the user specifies.
+
+\subsection{Transition Look-Aside Buffer}
+Creating the TLB requires:
+\begin{enumerate}
+\item Pages Table and Frames
+\item TLB Table
+\item TLB Replacement Algorithm
+\end{enumerate}
+
+Pages and Frames are created using the same scheme in the Paging section except that the algorithm is not used just the creation of the pages and frames.
+
+To create the TLB table the pages and frames are selected randomly to fill the TLB table. The Size of the TLB table should be less then the number of entries in the page table. The associated frames of the pages stored in the TLB are also stored in the TLB frame portion.
+
+The user is then prompted with what replacement algorithm they would like used on the TLB if there is a miss when accessing it. The choices are random, round-robin, and least recently used.
+
+
+\subsubsection{TLB Replacement: Random}
+%\todo[inline=true]{Talk about reading from a mailbox}
+The Random replacement algorithm for the TLB is a straightforward approach. The program will randomly select an index to replace in the TLB table with the page that was missed and then replace that entry with the page and associated frame.
+
+\subsubsection{TLB Replacement: Round-Robin}
+%\todo[inline=true]{Talk about writing to a mailbox}
+The round robin replacement algorithm is a little more involved than the random replacement with its book keeping of what pages are in the que. A que is created that will store all the pages and use the 0 index as the exit point of the que and the last index as the entry point after it is removed from the TLB. When The TLB is first created the pages that are currently in the que are put at the end of the que since every page should get equal priority of going in TLB and que to be in the TLB. If a TLB miss occurs the 0 index in the TLB will be removed and added the end of the que with everything in the TLB shifting up one and the page in the 0 index in the que is put in the last index of the TLB. The que is then shifted down and the program continues. 
+
+\subsubsection{TLB Replacement: Least Recently Used}
+%\todo[inline=true]{Talk about deleting a mailbox}
+The least recently used replacement algorithm keeps track of how often a process is used. The more often it is used the more chances it has to stay in the TLB and not get removed and replaced when a miss happens. If all pages have been used the same number of times the random replacement algorithm is selected to do the TLB replacement. If a few are equally least used the first found will be selected to be replaced. 
+
+\section{MMU-Simulation Testing}\label{testing}
+Unit testing for the MMU-Simulation program was done in an iterative process. Each time code was added to the shell it was tested to confirm the new code performed the desired function and did not break existing memory magement unit functions. 
+
+\section{Submission Description}\label{submission_description}
+\subsection{Compiling Instructions}
+To compile the source code, unzip the prog3.tar file. From the prog3 directory, type ``make" and the source code will be compiled. The mmu\_sim executable will be placed in the root mmu\_sim directory. Run the mmu\_simlation with the command "./mmu\_sim". All output from the simulator is directed to the terminal.
+
+\subsection{External Functions}
+For portability, functions were separated into reloc.cpp, tlb.cpp, and paging.cpp. As well as corresponding header files in an include directory.
+
+
+\end{multicols}
+
+%\pagebreak
+%\listoftodos
+
+\end{document}

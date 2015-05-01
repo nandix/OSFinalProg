@@ -131,6 +131,7 @@ void paging_algorithm( int *page_table, int * pages, int *frame_table, int *fram
 
 void access_physical_mem( const int *d, const int *frame, const int *frames, const int *page_size)
 {
+    int i;
     int tmp, total_mem;
     //sleep for 1 second to simulate access time to physical memory
     sleep(1);
@@ -143,6 +144,11 @@ void access_physical_mem( const int *d, const int *frame, const int *frames, con
         if( tmp >= total_mem )
             printf("The offset, %d, accessed non existent memory.\n\n", *d);
         else
-            printf("The offset, %d, accessed frame, %d, which is not associated with original look up.\n\n", *d, tmp/ (*frames)  );
+        {
+            tmp = *frame;
+            for( i = 0; i < *d % *page_size; i++ )
+                tmp++;
+            printf("The offset, %d, accessed frame, %d, which is not associated with original look up.\n\n", *d, tmp  );
+        }
     }
 }
