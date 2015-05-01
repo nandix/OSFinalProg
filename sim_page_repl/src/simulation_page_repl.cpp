@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-const int NUM_ALGS = 6;
+const int NUM_ALGS = 5;
 
 /**
  *  Function: main
@@ -26,7 +26,6 @@ int main( int argc, char **argv )
     repl_options[2] = lru_alg;
     repl_options[3] = lfu_alg;
     repl_options[4] = second_chance_alg;
-    repl_options[5] = clock_alg;
 
     int input = 1;
 
@@ -41,7 +40,6 @@ int main( int argc, char **argv )
         printf("3) LRU Algorithm\n");
         printf("4) LFU Algorithm\n");
         printf("5) Second Chance Algorithm\n");
-        printf("6) Clock Algorithm\n");
         printf("%d) exit the program\n", NUM_ALGS+1);
         printf("User selection: ");
         scanf("%d", &input );
