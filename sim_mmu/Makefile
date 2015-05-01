@@ -27,7 +27,7 @@ all:    mmu_simulation
 
 # specific targets
 mmu_simulation: simulation_mmu.o reloc.o tlb.o paging.o
-	$(LINK) $(CFLAGS) $^ -o $@
+	$(LINK) $(CFLAGS) $^ -o ../$@
 
 #bio_inspired_hw:	main.o bone_marrow.o hill_climbing.o  fit_func.o particle_swarm.o simulated_annealing.o genetic_programming.o
 #	$(LINK) -g -Wall -o $@ $^
@@ -44,7 +44,7 @@ mmu_simulation: simulation_mmu.o reloc.o tlb.o paging.o
 clean_objects:
 	rm -f *.o *~ core
 clean_execs:
-	rm -f mmu_simulation
+	rm -f ../mmu_simulation
 clean:
 	rm -f *.o *~ core
 	rm -f mmu_simulation

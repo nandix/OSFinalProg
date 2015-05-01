@@ -1,18 +1,3 @@
-\title{Operating Systems, Program 3 \\ Page Replacement Simulation}
-\author{Daniel Nix}
-\date{\today}
-
-\documentclass[11pt]{article}
-
-\usepackage{multicol}
-\usepackage[margin=1in]{geometry}
-\usepackage[T1]{fontenc}
-
-\usepackage{etex}
-\usepackage{todonotes}
-
-\begin{document}
-\maketitle
 
 
 \begin{multicols}{2}
@@ -53,7 +38,11 @@ The Least Frequently Used (LFU) algorithm selects the frame in physical memory w
 The LFU algorithm is implemented by creating a counter for each possible page that might be requested. Each time a page is requested its counter is incremented. When a page miss occurs the simulation looks at the counters for each page in memory and selects the page with the smallest counter as the victim.
 
 \subsection{Second Chance/Clock}
-\todo[inline=true]{Second Chance}
+The second chance algorithm attempts to avoid page misses by giving a page a second chance at being a victim. That is, if a page is used twice then there is a better chance that it will be used again than if the page has only been used once. A second chance counter is used to track the pages that have been requested twice.
+
+The second chance algorithm is implemented in essentialy the same manner as the LRU algorithm. It searches for the page in memory that is least recently used but as opposed to selecting it as a victim frame immediately, a second chance counter is checked. If the second chance counter is 1, it is decremented to zero and the page is not replaced. If the second chance counter is 0 the page is selected as a victim. 
+
+When a page request is made for a page already in the frame table, that frame's second chance counter is set to 1 indicating that it has been used and should be given a second chance.
 
 \section{Simulation Testing}\label{testing} 
 Testing for each algorithm was done by printing a verbose output for each step in the page replacement algorithm and following it by hand. When each algorithm was confirmed to be correct it was pushed to the GitHub repository. This method for testing ensures correctness for most cases but, in some extraneous circumstance, may have missed an unknown bug that could occur in a larger simulation. However, all simulations run in testing produced correct output.

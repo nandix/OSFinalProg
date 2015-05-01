@@ -15,7 +15,7 @@ CC = g++
 CFLAGS = -g 
 
 prosim:	 main.cpp functions.cpp
-	$(CC) -o prosim main.cpp
+	$(CC) -o ../prosim main.cpp
 
 clean:	
 	rm -f *.o core

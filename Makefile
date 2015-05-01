@@ -4,12 +4,21 @@ CC = g++
 
 FLAGS = -g -Wall
 
-EXECS = dash
+EXECS = dash mmu_simulation sched_sim paging_simulation
 
 all: $(EXECS)
 
-dash: Source/dash.cpp
-	$(CC) $(FLAGS) -o $@ $? $(LIBS)
+dash:
+	$(MAKE) -C ./sim_shm_dash
+
+mmu_simulation:
+	$(MAKE) -C ./sim_mmu
+
+sched_sim:
+	$(MAKE) -C ./sim_scheduling
+
+paging_simulation:
+	$(MAKE) -C ./sim_page_repl
 
 clean:
 	$(RM) $(EXECS)

@@ -1,0 +1,47 @@
+% !TEX encoding = UTF-8 Unicode
+% !TEX root = SystemTemplate.tex
+
+
+
+
+
+
+\documentclass{book}
+
+
+\usepackage{multicol}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+
+\usepackage{etex}
+%\usepackage{todonotes}
+
+
+% Add your title page contents here 
+\title{\huge \bfseries Operating Systems\\ Final Program Documentation }
+\author{  Daniel Nix \and  Chris Smith \and  Matthew Rames }
+\date{\today}
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+%%  Add to the following chapters
+\chapter{Shared Memory: Mailboxes}
+\input{Documentation/prog3_shm.tex}
+
+\chapter{Process Scheduling}
+\input{Documentation/prog3_process.tex}
+
+
+\chapter{Memory Management Unit}
+\input{Documentation/prog3_mmu.tex}
+
+\chapter{Page Replacement}
+\input{Documentation/prog3_page_repl_sim.tex}
+
+
+\end{document}
