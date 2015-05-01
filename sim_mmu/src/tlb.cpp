@@ -179,6 +179,9 @@ void tlb_miss_random(int *tlb_pages, int* tlb_frames, int* page_table, int* max_
     int tmp = rand() % *max_tlb;
     tlb_pages[tmp] = *p;
     tlb_frames[tmp] = page_table[*p];
+    for( int i = 0; i < *max_tlb; i++)
+        if(count[i] > 0 )
+            count[i]--;
     count[tmp] = 0;
     print_tlb( tlb_pages, tlb_frames, max_tlb);
 }
@@ -229,9 +232,13 @@ void tlb_miss_least_used( int *tlb_pages, int* tlb_frames, int* page_table, int*
     {
         tlb_pages[loc] = *p;
         tlb_frames[loc] = page_table[*p];
+        for( i = 0; i < *max_tlb; i++)
+            if( count[i] > 0 )
+                count[i]--;
         count[loc] = 0;
+    
+        print_tlb( tlb_pages, tlb_frames, max_tlb);
     }
-    print_tlb( tlb_pages, tlb_frames, max_tlb);
 }
 /************************************************************************
 *   Function: void print_tlb( int *tlb_pages, int *tlb_frames, int *num_tlb 
