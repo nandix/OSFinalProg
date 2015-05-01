@@ -396,15 +396,13 @@ void second_chance_alg(void){
         	printf("Request for page %d was a miss!\n", (page_list[i]).page_num);
 
         	// INSERT SECOND CHANCE REPLACEMENT ALGORITHM FOR A PAGE MISS HERE
-
-        	// I tried to do it like this, but I don't know if it is correct
-        	// repl_index = find_second_chance_repl( &frame_table, frames );
-        	// page_list[i].frame_num = repl_index;
-        	// page_list[i].lru_time = clock();
-        	// page_list[i].second_chance = 1;
+        	 repl_index = find_second_chance_repl( &frame_table, frames );
+        	 page_list[i].frame_num = repl_index;
+        	 page_list[i].lru_time = clock();
+        	 page_list[i].second_chance = 1;
         	
-        	// frame_table[repl_index] = page_list[i];
-        	// printf("Replace page at frame %d.\n", page_list[i].frame_num);
+        	 frame_table[repl_index] = page_list[i];
+        	 printf("Replace page at frame %d.\n", page_list[i].frame_num);
         	print_frame_table(&frame_table, frames, true);
         }
 
