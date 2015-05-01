@@ -410,6 +410,7 @@ void second_chance_alg(void){
 
         else if( page_request_key == PAGE_IN_TABLE ){
         	printf("Page already in table! No replacement necessary!\n");
+		(*frame_table)[i].second_chance = clock();
         	print_frame_table(&frame_table, frames, true);
         }
 
